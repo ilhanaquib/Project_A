@@ -1,0 +1,51 @@
+[gd_scene load_steps=7 format=3 uid="uid://6c7xb2wjqxss"]
+
+[ext_resource type="PackedScene" uid="uid://dboc4w63adf4c" path="res://scenes/player.tscn" id="1_xv6ae"]
+[ext_resource type="PackedScene" uid="uid://cclsamu7njy6j" path="res://scenes/background.tscn" id="2_60nut"]
+[ext_resource type="FontFile" uid="uid://bjxol57gjarrf" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="5_rqasg"]
+[ext_resource type="Script" path="res://scripts/enemy_spawn.gd" id="6_ki3s5"]
+[ext_resource type="Script" path="res://scripts/score.gd" id="6_okowo"]
+
+[sub_resource type="GDScript" id="GDScript_3p5ri"]
+script/source = "extends ParallaxBackground
+
+var camera_velocity: Vector2 = Vector2(0,100)
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	var new_offset: Vector2 = get_scroll_offset() + camera_velocity * delta
+	set_scroll_offset( new_offset )
+"
+
+[node name="Game" type="Node2D"]
+
+[node name="UserInterface" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Score" type="Label" parent="UserInterface"]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 25.0
+offset_right = 147.0
+offset_bottom = 48.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_rqasg")
+text = "Score : 0"
+script = ExtResource("6_okowo")
+
+[node name="Background" parent="." instance=ExtResource("2_60nut")]
+script = SubResource("GDScript_3p5ri")
+
+[node name="Player" parent="." instance=ExtResource("1_xv6ae")]
+z_index = 5
+position = Vector2(296, 737)
+
+[node name="ProjectileSpawn" type="Marker2D" parent="Player"]
+position = Vector2(0, -15)
+
+[node name="EnemySpawn" type="Marker2D" parent="."]
+position = Vector2(276, -52)
+script = ExtResource("6_ki3s5")
